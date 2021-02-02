@@ -36,29 +36,29 @@ def main():
     input_name = sess.get_inputs()[0].name
     results = []
     for batch_size in [1, 32, 64, 128, 256, 640]:
-    tensor = np.array([cat]*batch_size)
-    print("Image input dimension:", tensor.shape)
-    gc.collect()
-    #Warm up for 3 time
-    print("Warmup 3 runs")
-    for i in range(3):
-        sess.run([], {input_name: tensor})
-        pass
-    print("Inference Running")
-    total_time = 0
-    for i in range(num_of_runs):
+        tensor = np.array([cat]*batch_size)
+        print("Image input dimension:", tensor.shape)
         gc.collect()
-        start_time = time.time()
-        sess.run([], {input_name: tensor})
-        end_time = time.time()
-        total_time = total_time + (end_time - start_time)
-        pass
-    del tensor, i
-    average_time = total_time / num_of_runs
-    throughput = batch_size / average_time
-    print("Average time for",batch_size, "batch_size is", average_time, "s")
-    print("Throughput for", batch_size, "images is", throughput,"imgs/s\n")
-    results.append([batch_size, throughput, average_time])
+        #Warm up for 3 time
+        print("Warmup 3 runs")
+        for i in range(3):
+            sess.run([], {input_name: tensor})
+            pass
+        print("Inference Running")
+        total_time = 0
+        for i in range(num_of_runs):
+            gc.collect()
+            start_time = time.time()
+            sess.run([], {input_name: tensor})
+            end_time = time.time()
+            total_time = total_time + (end_time - start_time)
+            pass
+        del tensor, i
+        average_time = total_time / num_of_runs
+        throughput = batch_size / average_time
+        print("Average time for",batch_size, "batch_size is", average_time, "s")
+        print("Throughput for", batch_size, "images is", throughput,"imgs/s\n")
+        results.append([batch_size, throughput, average_time])
 
     print("batch_size, Throughput, Average Time")
     for i in results:
@@ -67,7 +67,7 @@ def main():
     print('\n\n')
     del sess, throughput, average_time, num_of_runs, batch_size, total_time, i, results
     gc.collect()
-     pass
+    pass
 if __name__ == "__main__":
     gc.collect()
     main()
